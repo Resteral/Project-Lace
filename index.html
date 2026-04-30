@@ -198,6 +198,14 @@
                 </div>
                 <div class="config-form" id="config-form">
                   <div class="form-group">
+                    <label for="api-key-input">OpenAI API Key</label>
+                    <div style="display:flex;gap:.5rem;align-items:center;">
+                      <input type="password" id="api-key-input" placeholder="sk-..." style="flex:1;background:var(--bg-primary);border:1px solid var(--border);border-radius:var(--radius-sm);padding:.6rem .75rem;color:var(--text-primary);outline:none;font-family:'JetBrains Mono',monospace;font-size:.8rem;" />
+                      <button class="btn-primary btn-sm" id="btn-save-key" style="white-space:nowrap;">Save Key</button>
+                    </div>
+                    <span id="api-key-status" style="font-size:.75rem;color:var(--text-muted);margin-top:.25rem;display:block;">No key set — using offline mode (rule-based responses)</span>
+                  </div>
+                  <div class="form-group">
                     <label for="agent-name">Agent Name</label>
                     <input type="text" id="agent-name" placeholder="e.g. Store Assistant" value="Store Assistant" />
                   </div>

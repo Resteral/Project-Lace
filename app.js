@@ -39,7 +39,76 @@ const topQueries = [
   { text: 'Do you have energy drinks?', count: 121, pct: 35 },
 ];
 
-// --- Agent Response Engine ---
+// --- Agent Response Engine (OpenAI + Fallback) ---
+
+// Conversation history for context
+let conversationHistory = [];
+
+// Get the API key from localStorage
+function getApiKey() {
+  return localStorage.getItem('agentchip_openai_key') || '';
+}
+function setApiKey(key) {
+  localStorage.setItem('agentchip_openai_key', key);
+}
+
+// Build the system prompt from the Configure page
+function buildSystemPrompt() {
+  const persona = document.getElementById('agent-persona')?.value || '';
+  const knowledge = document.getElementById('knowledge-base')?.value || '';
+  const maxTokens = document.getElementById('max-tokens')?.value || 150;
+  return `${persona}\n\nBusiness Knowledge Base:\n${knowledge}\n\nKeep responses under ${maxTokens} tokens. Be concise and helpful.`;
+}
+
+// Call OpenAI API
+async function callOpenAI(userMsg) {
+  const apiKey = getApiKey();
+  if (!apiKey) return null; // fall back to rule-based
+
+  conversationHistory.push({ role: 'user', content: userMsg });
+  // Keep last 20 messages for context
+  if (conversationHistory.length > 20) {
+    conversationHistory = conversationHistory.slice(-20);
+  }
+
+  try {
+    const res = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        model: 'gpt-4o-mini',
+        messages: [
+          { role: 'system', content: buildSystemPrompt() },
+          ...conversationHistory,
+        ],
+        max_tokens: parseInt(document.getElementById('max-tokens')?.value || 150),
+        temperature: 0.7,
+      }),
+    });
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      console.error('OpenAI API error:', err);
+      return null; // fall back
+    }
+
+    const data = await res.json();
+    const reply = data.choices?.[0]?.message?.content?.trim();
+    if (reply) {
+      conversationHistory.push({ role: 'assistant', content: reply });
+      return reply;
+    }
+    return null;
+  } catch (e) {
+    console.error('OpenAI fetch failed:', e);
+    return null;
+  }
+}
+
+// Fallback rule-based responses
 const agentKnowledge = {
   hours: 'Our store hours are Monday-Saturday 7am-11pm, and Sunday 8am-10pm.',
   wifi: 'The WiFi password is StoreGuest2026. Connect to the network "StoreWiFi".',
@@ -50,7 +119,7 @@ const agentKnowledge = {
   location: 'We\'re located at 123 Main Street, Downtown. Right next to the post office!',
 };
 
-function generateAgentResponse(userMsg) {
+function fallbackResponse(userMsg) {
   const msg = userMsg.toLowerCase();
   if (msg.includes('hour') || msg.includes('open') || msg.includes('close')) return agentKnowledge.hours;
   if (msg.includes('wifi') || msg.includes('password') || msg.includes('internet')) return agentKnowledge.wifi;
@@ -61,8 +130,15 @@ function generateAgentResponse(userMsg) {
   if (msg.includes('where') || msg.includes('location') || msg.includes('address')) return agentKnowledge.location;
   if (msg.includes('hello') || msg.includes('hi') || msg.includes('hey')) return 'Hey there! 😊 Welcome to the store. How can I help you today?';
   if (msg.includes('thank')) return 'You\'re welcome! Let me know if you need anything else. Have a great day! 🙌';
-  if (msg.includes('price') || msg.includes('cost') || msg.includes('how much')) return 'I can help with that! Could you tell me which product you\'re looking at? You can also scan the barcode on our price-check station near the entrance.';
-  return 'Great question! Let me look into that for you. In the meantime, feel free to ask about our store hours, product locations, WiFi access, or return policy. I\'m here to help! 😊';
+  if (msg.includes('price') || msg.includes('cost') || msg.includes('how much')) return 'I can help with that! Could you tell me which product you\'re looking at?';
+  return 'Great question! Feel free to ask about our store hours, product locations, WiFi access, or return policy. 😊';
+}
+
+// Main response function — tries OpenAI first, falls back to rules
+async function generateAgentResponse(userMsg) {
+  const aiResponse = await callOpenAI(userMsg);
+  if (aiResponse) return aiResponse;
+  return fallbackResponse(userMsg);
 }
 
 // --- Navigation ---
@@ -237,22 +313,28 @@ function addLog(type, badge, msg) {
   logEntries.scrollTop = logEntries.scrollHeight;
 }
 
-function handleSend() {
+async function handleSend() {
   const text = chatInput.value.trim();
   if (!text) return;
   chatInput.value = '';
   msgCount++;
   addChatMessage(text, 'user');
-  addLog('info', 'INPUT', `User: "${text}"`);
+  const usingAI = !!getApiKey();
+  addLog('info', 'INPUT', `User: "${text}"${usingAI ? ' [AI mode]' : ' [offline mode]'}`);
   addTypingIndicator();
-  const delay = 600 + Math.random() * 1000;
-  setTimeout(() => {
+  try {
+    const response = await generateAgentResponse(text);
     removeTypingIndicator();
-    const response = generateAgentResponse(text);
     addChatMessage(response, 'agent');
-    addLog('success', 'REPLY', `Agent responded (${response.length} chars)`);
+    addLog('success', usingAI ? 'AI' : 'RULE', `Agent responded (${response.length} chars)`);
     updateInteractionCount();
-  }, delay);
+  } catch (e) {
+    removeTypingIndicator();
+    const fallback = fallbackResponse(text);
+    addChatMessage(fallback, 'agent');
+    addLog('warn', 'FALLBACK', `AI failed, used rule-based response`);
+    updateInteractionCount();
+  }
 }
 
 function updateInteractionCount() {
@@ -492,6 +574,38 @@ document.getElementById('btn-clear-logs').addEventListener('click', () => {
   addLog('info', 'SYSTEM', 'Logs cleared');
 });
 
+// --- API Key Management ---
+document.getElementById('btn-save-key').addEventListener('click', () => {
+  const input = document.getElementById('api-key-input');
+  const status = document.getElementById('api-key-status');
+  const key = input.value.trim();
+  if (key) {
+    setApiKey(key);
+    status.textContent = '✓ API key saved — AI mode active (GPT-4o-mini)';
+    status.style.color = '#10b981';
+    input.value = '';
+    input.placeholder = '••••••••••••' + key.slice(-4);
+    addLog('success', 'API', 'OpenAI API key configured — switching to AI mode');
+  } else {
+    setApiKey('');
+    status.textContent = 'No key set — using offline mode (rule-based responses)';
+    status.style.color = '';
+    input.placeholder = 'sk-...';
+  }
+});
+
+// Load saved key on startup
+function initApiKey() {
+  const key = getApiKey();
+  const status = document.getElementById('api-key-status');
+  const input = document.getElementById('api-key-input');
+  if (key) {
+    status.textContent = '✓ API key saved — AI mode active (GPT-4o-mini)';
+    status.style.color = '#10b981';
+    input.placeholder = '••••••••••••' + key.slice(-4);
+  }
+}
+
 // --- Init ---
 function init() {
   renderActivities();
@@ -500,6 +614,7 @@ function init() {
   renderTemplates();
   renderTopQueries();
   renderSatisfaction();
+  initApiKey();
   setTimeout(drawInteractionsChart, 100);
 }
 
