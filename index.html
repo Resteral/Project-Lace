@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AgentChip — Universal AI Agent Platform</title>
+  <meta name="description" content="Configure, deploy, and manage AI agent chips for any business. Universal edge AI hardware platform." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="app">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-brand">
+        <div class="brand-icon">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+            <rect x="2" y="2" width="24" height="24" rx="6" stroke="url(#brandGrad)" stroke-width="2.5"/>
+            <circle cx="14" cy="14" r="5" fill="url(#brandGrad)"/>
+            <line x1="14" y1="2" x2="14" y2="7" stroke="url(#brandGrad)" stroke-width="2" stroke-linecap="round"/>
+            <line x1="14" y1="21" x2="14" y2="26" stroke="url(#brandGrad)" stroke-width="2" stroke-linecap="round"/>
+            <line x1="2" y1="14" x2="7" y2="14" stroke="url(#brandGrad)" stroke-width="2" stroke-linecap="round"/>
+            <line x1="21" y1="14" x2="26" y2="14" stroke="url(#brandGrad)" stroke-width="2" stroke-linecap="round"/>
+            <defs>
+              <linearGradient id="brandGrad" x1="0" y1="0" x2="28" y2="28">
+                <stop stop-color="#6366f1"/>
+                <stop offset="1" stop-color="#a855f7"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <span class="brand-name">AgentChip</span>
+      </div>
+
+      <nav class="sidebar-nav">
+        <button class="nav-item active" data-page="dashboard" id="nav-dashboard">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+          <span>Dashboard</span>
+        </button>
+        <button class="nav-item" data-page="devices" id="nav-devices">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><circle cx="12" cy="12" r="3"/><line x1="12" y1="1" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="23"/><line x1="1" y1="12" x2="4" y2="12"/><line x1="20" y1="12" x2="23" y2="12"/></svg>
+          <span>Devices</span>
+        </button>
+        <button class="nav-item" data-page="configure" id="nav-configure">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+          <span>Configure</span>
+        </button>
+        <button class="nav-item" data-page="simulator" id="nav-simulator">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          <span>Live Agent</span>
+        </button>
+        <button class="nav-item" data-page="analytics" id="nav-analytics">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+          <span>Analytics</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-badge">
+          <div class="user-avatar">S</div>
+          <div class="user-info">
+            <span class="user-name">Sean</span>
+            <span class="user-plan">Pro Plan</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content" id="main-content">
+      <!-- Top Bar -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="menu-toggle" id="menu-toggle">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          </button>
+          <h1 class="page-title" id="page-title">Dashboard</h1>
+        </div>
+        <div class="topbar-right">
+          <div class="search-box">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" placeholder="Search devices, agents..." id="global-search" />
+          </div>
+          <button class="topbar-btn" id="btn-add-device" title="Add Device">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </button>
+          <button class="topbar-btn notification-btn" id="btn-notifications" title="Notifications">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+            <span class="notification-dot"></span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Page Container -->
+      <div class="page-container" id="page-container">
+
+        <!-- ====== DASHBOARD PAGE ====== -->
+        <section class="page active" id="page-dashboard">
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-icon" style="--accent: #6366f1;">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><circle cx="12" cy="12" r="3"/></svg>
+              </div>
+              <div class="stat-info">
+                <span class="stat-value" id="stat-devices">12</span>
+                <span class="stat-label">Active Devices</span>
+              </div>
+              <span class="stat-change positive">+3 this week</span>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon" style="--accent: #10b981;">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              </div>
+              <div class="stat-info">
+                <span class="stat-value" id="stat-interactions">2,847</span>
+                <span class="stat-label">Interactions Today</span>
+              </div>
+              <span class="stat-change positive">+18% vs yesterday</span>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon" style="--accent: #f59e0b;">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+              </div>
+              <div class="stat-info">
+                <span class="stat-value" id="stat-uptime">99.7%</span>
+                <span class="stat-label">Uptime</span>
+              </div>
+              <span class="stat-change positive">Healthy</span>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon" style="--accent: #ef4444;">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+              </div>
+              <div class="stat-info">
+                <span class="stat-value" id="stat-satisfaction">94%</span>
+                <span class="stat-label">Satisfaction</span>
+              </div>
+              <span class="stat-change positive">+2% this month</span>
+            </div>
+          </div>
+
+          <div class="dashboard-grid">
+            <div class="card activity-card">
+              <div class="card-header">
+                <h3>Recent Activity</h3>
+                <button class="card-action">View All</button>
+              </div>
+              <div class="activity-list" id="activity-list">
+                <!-- Populated by JS -->
+              </div>
+            </div>
+            <div class="card device-status-card">
+              <div class="card-header">
+                <h3>Device Fleet</h3>
+                <span class="fleet-status"><span class="status-dot online"></span> All Online</span>
+              </div>
+              <div class="device-mini-list" id="device-mini-list">
+                <!-- Populated by JS -->
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ====== DEVICES PAGE ====== -->
+        <section class="page" id="page-devices">
+          <div class="page-actions">
+            <div class="filter-group">
+              <button class="filter-btn active" data-filter="all">All</button>
+              <button class="filter-btn" data-filter="online">Online</button>
+              <button class="filter-btn" data-filter="offline">Offline</button>
+            </div>
+            <button class="btn-primary" id="btn-new-device">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Add Device
+            </button>
+          </div>
+          <div class="devices-grid" id="devices-grid">
+            <!-- Populated by JS -->
+          </div>
+        </section>
+
+        <!-- ====== CONFIGURE PAGE ====== -->
+        <section class="page" id="page-configure">
+          <div class="configure-layout">
+            <div class="config-sidebar">
+              <h3>Agent Templates</h3>
+              <div class="template-list" id="template-list">
+                <!-- Populated by JS -->
+              </div>
+            </div>
+            <div class="config-main">
+              <div class="card config-card">
+                <div class="card-header">
+                  <h3>Agent Configuration</h3>
+                  <button class="btn-primary btn-sm" id="btn-save-config">Save & Deploy</button>
+                </div>
+                <div class="config-form" id="config-form">
+                  <div class="form-group">
+                    <label for="agent-name">Agent Name</label>
+                    <input type="text" id="agent-name" placeholder="e.g. Store Assistant" value="Store Assistant" />
+                  </div>
+                  <div class="form-group">
+                    <label for="agent-persona">Persona / System Prompt</label>
+                    <textarea id="agent-persona" rows="5" placeholder="Describe how the agent should behave...">You are a friendly and helpful store assistant at a convenience store. You help customers find products, check prices, and answer questions about store hours and policies. Keep responses brief and friendly.</textarea>
+                  </div>
+                  <div class="form-group">
+                    <label for="agent-voice">Voice Style</label>
+                    <select id="agent-voice">
+                      <option value="alloy">Alloy (Neutral)</option>
+                      <option value="echo">Echo (Male)</option>
+                      <option value="fable">Fable (British)</option>
+                      <option value="nova" selected>Nova (Female)</option>
+                      <option value="shimmer">Shimmer (Soft)</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label>Capabilities</label>
+                    <div class="capabilities-grid">
+                      <label class="capability-toggle">
+                        <input type="checkbox" checked id="cap-voice" /> 
+                        <span class="toggle-slider"></span>
+                        <span>Voice Interaction</span>
+                      </label>
+                      <label class="capability-toggle">
+                        <input type="checkbox" checked id="cap-text" />
+                        <span class="toggle-slider"></span>
+                        <span>Text Chat</span>
+                      </label>
+                      <label class="capability-toggle">
+                        <input type="checkbox" id="cap-vision" />
+                        <span class="toggle-slider"></span>
+                        <span>Vision / Camera</span>
+                      </label>
+                      <label class="capability-toggle">
+                        <input type="checkbox" checked id="cap-knowledge" />
+                        <span class="toggle-slider"></span>
+                        <span>Knowledge Base</span>
+                      </label>
+                      <label class="capability-toggle">
+                        <input type="checkbox" id="cap-actions" />
+                        <span class="toggle-slider"></span>
+                        <span>Trigger Actions</span>
+                      </label>
+                      <label class="capability-toggle">
+                        <input type="checkbox" id="cap-analytics" />
+                        <span class="toggle-slider"></span>
+                        <span>Collect Analytics</span>
+                      </label>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="knowledge-base">Knowledge Base</label>
+                    <textarea id="knowledge-base" rows="6" placeholder="Add business-specific knowledge...">Store Hours: Mon-Sat 7am-11pm, Sun 8am-10pm
+Return Policy: 30-day returns with receipt
+WiFi Password: StoreGuest2026
+Popular Items: Energy drinks, snacks, phone chargers
+Location: 123 Main Street, Downtown</textarea>
+                  </div>
+                  <div class="form-group">
+                    <label for="max-tokens">Response Length</label>
+                    <input type="range" id="max-tokens" min="50" max="500" value="150" />
+                    <div class="range-labels">
+                      <span>Brief</span>
+                      <span class="range-value" id="token-value">150 tokens</span>
+                      <span>Detailed</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ====== SIMULATOR PAGE ====== -->
+        <section class="page" id="page-simulator">
+          <div class="simulator-layout">
+            <div class="simulator-device">
+              <div class="device-frame">
+                <div class="device-screen">
+                  <div class="device-topbar">
+                    <span class="device-label">AgentChip — Store Assistant</span>
+                    <span class="device-status-dot online"></span>
+                  </div>
+                  <div class="chat-messages" id="chat-messages">
+                    <div class="chat-msg agent">
+                      <div class="msg-avatar">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><circle cx="12" cy="12" r="3"/></svg>
+                      </div>
+                      <div class="msg-bubble">
+                        <p>Hi there! 👋 I'm your Store Assistant. How can I help you today?</p>
+                        <span class="msg-time">Just now</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="chat-input-area">
+                    <div class="chat-input-wrapper">
+                      <input type="text" id="chat-input" placeholder="Type a message or press mic..." />
+                      <button class="mic-btn" id="mic-btn" title="Voice input">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+                      </button>
+                    </div>
+                    <button class="send-btn" id="send-btn">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <p class="device-caption">Live Agent Simulator — responds using your configuration</p>
+            </div>
+            <div class="simulator-logs">
+              <div class="card">
+                <div class="card-header">
+                  <h3>Agent Logs</h3>
+                  <button class="card-action" id="btn-clear-logs">Clear</button>
+                </div>
+                <div class="log-entries" id="log-entries">
+                  <div class="log-entry info">
+                    <span class="log-time">00:00:00</span>
+                    <span class="log-badge info">SYSTEM</span>
+                    <span class="log-msg">Agent initialized — Store Assistant v1.0</span>
+                  </div>
+                  <div class="log-entry success">
+                    <span class="log-time">00:00:01</span>
+                    <span class="log-badge success">READY</span>
+                    <span class="log-msg">Listening for input (text + voice enabled)</span>
+                  </div>
+                </div>
+              </div>
+              <div class="card" style="margin-top: 1rem;">
+                <div class="card-header">
+                  <h3>Device Telemetry</h3>
+                </div>
+                <div class="telemetry-grid">
+                  <div class="telemetry-item">
+                    <span class="telemetry-label">CPU</span>
+                    <div class="telemetry-bar"><div class="telemetry-fill" style="width: 23%;"></div></div>
+                    <span class="telemetry-value">23%</span>
+                  </div>
+                  <div class="telemetry-item">
+                    <span class="telemetry-label">RAM</span>
+                    <div class="telemetry-bar"><div class="telemetry-fill" style="width: 41%;"></div></div>
+                    <span class="telemetry-value">41%</span>
+                  </div>
+                  <div class="telemetry-item">
+                    <span class="telemetry-label">Temp</span>
+                    <div class="telemetry-bar"><div class="telemetry-fill" style="width: 35%; background: #f59e0b;"></div></div>
+                    <span class="telemetry-value">42°C</span>
+                  </div>
+                  <div class="telemetry-item">
+                    <span class="telemetry-label">Net</span>
+                    <div class="telemetry-bar"><div class="telemetry-fill" style="width: 67%; background: #10b981;"></div></div>
+                    <span class="telemetry-value">-52dBm</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ====== ANALYTICS PAGE ====== -->
+        <section class="page" id="page-analytics">
+          <div class="analytics-header">
+            <div class="date-range">
+              <button class="filter-btn active">7 Days</button>
+              <button class="filter-btn">30 Days</button>
+              <button class="filter-btn">90 Days</button>
+            </div>
+          </div>
+          <div class="analytics-grid">
+            <div class="card chart-card wide">
+              <div class="card-header">
+                <h3>Interactions Over Time</h3>
+              </div>
+              <canvas id="chart-interactions" height="220"></canvas>
+            </div>
+            <div class="card chart-card">
+              <div class="card-header">
+                <h3>Top Queries</h3>
+              </div>
+              <div class="top-queries" id="top-queries">
+                <!-- Populated by JS -->
+              </div>
+            </div>
+            <div class="card chart-card">
+              <div class="card-header">
+                <h3>Satisfaction Breakdown</h3>
+              </div>
+              <div class="satisfaction-chart" id="satisfaction-chart">
+                <!-- Populated by JS -->
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <!-- Add Device Modal -->
+  <div class="modal-overlay" id="modal-overlay">
+    <div class="modal" id="modal-add-device">
+      <div class="modal-header">
+        <h3>Register New Device</h3>
+        <button class="modal-close" id="modal-close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="device-name-input">Device Name</label>
+          <input type="text" id="device-name-input" placeholder="e.g. Front Counter Agent" />
+        </div>
+        <div class="form-group">
+          <label for="device-type-input">Device Type</label>
+          <select id="device-type-input">
+            <option value="voice">Voice Agent (Mic + Speaker)</option>
+            <option value="display">Display Agent (Screen + Speaker)</option>
+            <option value="vision">Vision Agent (Camera + AI)</option>
+            <option value="full">Full Agent (All Sensors)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="device-location-input">Location</label>
+          <input type="text" id="device-location-input" placeholder="e.g. Entrance, Aisle 3, Counter" />
+        </div>
+        <div class="form-group">
+          <label for="device-template-input">Agent Template</label>
+          <select id="device-template-input">
+            <option value="store-assistant">Store Assistant</option>
+            <option value="greeter">Greeter</option>
+            <option value="inventory">Inventory Monitor</option>
+            <option value="custom">Custom</option>
+          </select>
+        </div>
+        <div class="pairing-code-area" id="pairing-area" style="display:none;">
+          <p>Pair your device using this code:</p>
+          <div class="pairing-code" id="pairing-code">A7X-3K9</div>
+          <p class="pairing-hint">Enter this code on your AgentChip device or scan the QR code displayed on the device.</p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" id="btn-cancel-device">Cancel</button>
+        <button class="btn-primary" id="btn-register-device">Generate Pairing Code</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
